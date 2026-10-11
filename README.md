@@ -34,7 +34,10 @@ Built for the PayPal AI Hackathon.
    
    Edit `.env` and add your credentials:
    - `GEMINI_API_KEY` - Get from [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` - Get from [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/) (sandbox app)
+   - `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` - See PayPal Sandbox Setup below
+   - `NEXT_PUBLIC_PAYPAL_CLIENT_ID` - Same as PAYPAL_CLIENT_ID (needed for client-side PayPal button)
+   - `NEXT_PUBLIC_APP_URL` - Your app URL (default: http://localhost:3000)
+   - `NEXT_PUBLIC_BUSINESS_NAME` - Your business name (default: PayNudge Demo Studio)
 
 3. **Initialize the database:**
    ```bash
@@ -57,6 +60,44 @@ Built for the PayPal AI Hackathon.
    ```
    http://localhost:3000
    ```
+
+## PayPal Sandbox Setup
+
+PayNudge uses PayPal's sandbox environment for testing payments. No real money is involved.
+
+1. **Create a PayPal Developer account:**
+   - Go to [developer.paypal.com](https://developer.paypal.com)
+   - Sign in or create an account
+
+2. **Create a sandbox app:**
+   - Navigate to "Apps & Credentials"
+   - Make sure you're in "Sandbox" mode (toggle at the top)
+   - Click "Create App"
+   - Give it a name (e.g., "PayNudge Sandbox")
+   - Click "Create App"
+
+3. **Copy your credentials:**
+   - You'll see your **Client ID** and **Secret** on the app details page
+   - Copy the Client ID to both `PAYPAL_CLIENT_ID` and `NEXT_PUBLIC_PAYPAL_CLIENT_ID` in your `.env`
+   - Copy the Secret to `PAYPAL_CLIENT_SECRET` in your `.env`
+   - **Important:** Never commit your `.env` file or expose these credentials
+
+4. **Get sandbox test accounts:**
+   - Go to "Sandbox" → "Accounts" in the PayPal Developer Dashboard
+   - You'll see automatically created test accounts:
+     - **Business account** (merchant) - this receives payments
+     - **Personal account** (buyer) - use this to pay invoices
+   - Click on a Personal account and note the email and password (or create a new one)
+
+5. **Test a payment:**
+   - In PayNudge, copy a pay link for any "sent" invoice
+   - Open it in a new tab
+   - Click the PayPal button
+   - Log in with your **sandbox personal (buyer) account** credentials
+   - Complete the payment
+   - Return to the dashboard and click Refresh to see the invoice marked as Paid
+
+**Note:** Sandbox payments are not real. You're using fake accounts and fake money provided by PayPal for testing.
 
 ## Available Scripts
 

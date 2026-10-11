@@ -29,6 +29,38 @@ function StatusCellRenderer(props: ICellRendererParams) {
   );
 }
 
+// Actions cell renderer component
+function ActionsCellRenderer(props: ICellRendererParams) {
+  const [copied, setCopied] = useState(false);
+  const publicToken = props.data?.publicToken;
+  
+  if (!publicToken) return null;
+
+  const handleCopyLink = () => {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const link = `${appUrl}/pay/${publicToken}`;
+    
+    navigator.clipboard.writeText(link).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch((err) => {
+      console.error('Failed to copy:', err);
+    });
+  };
+
+  return (
+    <div className="grid-actions">
+      <button 
+        onClick={handleCopyLink}
+        className="copy-link-button"
+        title="Copy pay link"
+      >
+        {copied ? 'Copied!' : 'Copy link'}
+      </button>
+    </div>
+  );
+}
+
 export function InvoiceGrid({ invoices }: InvoiceGridProps) {
   const [quickFilterText, setQuickFilterText] = useState('');
   const today = getTodayString();
@@ -97,6 +129,14 @@ export function InvoiceGrid({ invoices }: InvoiceGridProps) {
       width: 120,
       filter: 'agTextColumnFilter',
       cellRenderer: StatusCellRenderer,
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 130,
+      sortable: false,
+      filter: false,
+      cellRenderer: ActionsCellRenderer,
     },
   ];
 

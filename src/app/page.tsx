@@ -13,7 +13,8 @@ export default function DeskPage() {
   const [invoices, setInvoices] = useState<InvoiceWithOverdue[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchInvoices = () => {
+    setLoading(true);
     fetch('/api/invoices')
       .then((res) => res.json())
       .then((data) => {
@@ -24,6 +25,20 @@ export default function DeskPage() {
         console.error('Failed to fetch invoices:', err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchInvoices();
+
+    // Refetch when tab regains focus
+    const handleFocus = () => {
+      fetchInvoices();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   if (loading) {
@@ -41,8 +56,13 @@ export default function DeskPage() {
   return (
     <div className="desk-container">
       <header className="desk-header">
-        <h1>PayNudge</h1>
-        <p className="desk-subtitle">Collections Desk</p>
+        <div>
+          <h1>PayNudge</h1>
+          <p className="desk-subtitle">Collections Desk</p>
+        </div>
+        <button onClick={fetchInvoices} className="refresh-button" title="Refresh">
+          Refresh
+        </button>
       </header>
       
       <SummaryStrip invoices={invoices} />

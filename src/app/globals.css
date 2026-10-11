@@ -42,6 +42,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 32px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .desk-header h1 {
@@ -56,6 +59,24 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.7;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.refresh-button {
+  padding: 8px 16px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.refresh-button:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .loading-state {
@@ -230,4 +251,29 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-ink);
   opacity: 0.3;
   text-decoration: line-through;
+}
+
+/* ===== Grid Actions ===== */
+.grid-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.copy-link-button {
+  padding: 4px 10px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.copy-link-button:hover {
+  background: var(--color-accent);
+  color: white;
 }
