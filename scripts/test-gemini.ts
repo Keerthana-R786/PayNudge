@@ -1,6 +1,8 @@
 /**
  * Test script for Gemini API connectivity
- * Usage: npm run test:gemini
+ * Usage: 
+ *   npm run test:gemini           - Test API with sample invoice
+ *   npx tsx --env-file=.env scripts/test-gemini.ts --list - List available models
  */
 
 import { generateStructuredOutput, getModelName, listModels } from '../src/lib/ai/client';
@@ -18,6 +20,43 @@ const TestInvoiceSchema = z.object({
   ),
   due_in_days: z.number().int(),
 });
+
+async function listAvailableModels() {
+  console.log('📋 Listing available Gemini models...\n');
+  console.log(`API Key: ${process.env.GEMINI_API_KEY ? '[SET]' : '[NOT SET]'}\n`);
+
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('❌ GEMINI_API_KEY is not set in .env file');
+    process.exit(1);
+  }
+
+  try {
+    const models = await listModels();
+    
+    if (models.length === 0) {
+      console.log('⚠️  No models found. Check your API key permissions.');
+      process.exit(1);
+    }
+
+    console.log(`✅ Found ${models.length} models that support generateContent:\n`);
+    models.forEach((model) => {
+      // Highlight the currently configured model
+      const isCurrent = model.includes(getModelName());
+      const prefix = isCurrent ? '→' : ' ';
+      console.log(`${prefix} ${model}`);
+    });
+
+    if (models.some(m => m.includes(getModelName()))) {
+      console.log(`\n💡 Your current model (${getModelName()}) is available.`);
+    } else {
+      console.log(`\n⚠️  Your current model (${getModelName()}) was not found in the list.`);
+      console.log('   Update GEMINI_MODEL in .env to one of the above models.');
+    }
+  } catch (error) {
+    console.error('❌ Failed to list models:', error instanceof Error ? error.message : 'Unknown error');
+    process.exit(1);
+  }
+}
 
 async function test() {
   console.log('🧪 Testing Gemini API connection...\n');
@@ -69,4 +108,10 @@ async function test() {
   }
 }
 
-test();
+// Check for --list flag
+const args = process.argv.slice(2);
+if (args.includes('--list')) {
+  listAvailableModels();
+} else {
+  test();
+}

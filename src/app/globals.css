@@ -277,3 +277,320 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-accent);
   color: white;
 }
+
+
+/* ===== Compose Bar ===== */
+.compose-bar {
+  margin: 32px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.compose-input {
+  width: 100%;
+  padding: 12px 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 18px;
+  color: var(--color-ink);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.compose-input:focus {
+  border-bottom-color: var(--color-accent);
+}
+
+.compose-input::placeholder {
+  color: var(--color-ink);
+  opacity: 0.3;
+  font-style: italic;
+}
+
+.compose-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.compose-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  opacity: 0.5;
+}
+
+/* ===== Invoice Preview ===== */
+.invoice-preview {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 32px;
+  margin: 32px 0;
+}
+
+.preview-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.preview-header h3 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.preview-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  opacity: 0.6;
+}
+
+.preview-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink);
+  opacity: 0.7;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-group input:focus {
+  border-color: var(--color-accent);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group-small input {
+  width: 100%;
+}
+
+.line-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.line-item-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 40px;
+  gap: 8px;
+  align-items: center;
+}
+
+.line-item-description {
+  flex: 1;
+}
+
+.line-item-amount {
+  font-family: var(--font-mono), 'Courier New', monospace;
+  text-align: right;
+}
+
+.remove-item-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-overdue);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.remove-item-button:hover {
+  background: var(--color-overdue);
+  color: white;
+  border-color: var(--color-overdue);
+}
+
+.add-item-button {
+  padding: 8px 12px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px dashed var(--color-accent);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.add-item-button:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+.preview-total {
+  padding: 10px 12px;
+  font-family: var(--font-mono), 'Courier New', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  text-align: right;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.confirm-button {
+  padding: 12px 24px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.confirm-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.confirm-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.discard-button {
+  padding: 12px 24px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.discard-button:hover {
+  border-color: var(--color-ink);
+}
+
+/* ===== Message Banner ===== */
+.message-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.message-success {
+  background: #E8F5F1;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+
+.message-error {
+  background: #F9EEEC;
+  border: 1px solid var(--color-overdue);
+  color: var(--color-overdue);
+}
+
+.copy-pay-link-button {
+  padding: 6px 12px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: white;
+  border: 1px solid var(--color-accent);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.copy-pay-link-button:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+.message-close {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: currentColor;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+.message-close:hover {
+  opacity: 1;
+}
+
+/* ===== Grid Highlight ===== */
+.ag-theme-quartz .row-highlight {
+  background-color: #FFF9E6 !important;
+  animation: highlight-fade 3s ease-out;
+}
+
+@keyframes highlight-fade {
+  0% {
+    background-color: #FFF3CD;
+  }
+  100% {
+    background-color: transparent;
+  }
+}

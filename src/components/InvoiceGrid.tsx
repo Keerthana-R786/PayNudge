@@ -15,6 +15,7 @@ interface InvoiceWithOverdue extends Invoice {
 
 interface InvoiceGridProps {
   invoices: InvoiceWithOverdue[];
+  highlightedId?: number | null;
 }
 
 // Status cell renderer component
@@ -61,7 +62,7 @@ function ActionsCellRenderer(props: ICellRendererParams) {
   );
 }
 
-export function InvoiceGrid({ invoices }: InvoiceGridProps) {
+export function InvoiceGrid({ invoices, highlightedId }: InvoiceGridProps) {
   const [quickFilterText, setQuickFilterText] = useState('');
   const today = getTodayString();
 
@@ -187,6 +188,12 @@ export function InvoiceGrid({ invoices }: InvoiceGridProps) {
           pinnedBottomRowData={pinnedBottomRowData}
           animateRows={true}
           domLayout="autoHeight"
+          getRowClass={(params) => {
+            if (params.data && params.data.id === highlightedId) {
+              return 'row-highlight';
+            }
+            return '';
+          }}
         />
       </div>
     </div>
