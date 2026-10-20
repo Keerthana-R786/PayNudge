@@ -7,6 +7,8 @@ import { SummaryStrip } from '@/components/SummaryStrip';
 import { InvoiceGrid } from '@/components/InvoiceGrid';
 import { ComposeBar } from '@/components/ComposeBar';
 import { InvoicePreview } from '@/components/InvoicePreview';
+import { InvoiceDrawer } from '@/components/InvoiceDrawer';
+import { InsightsBrief } from '@/components/InsightsBrief';
 
 interface InvoiceWithOverdue extends Invoice {
   isOverdue: boolean;
@@ -20,6 +22,8 @@ export default function DeskPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string; payLink?: string } | null>(null);
   const [highlightedId, setHighlightedId] = useState<number | null>(null);
   const gridWrapperRef = useRef<HTMLDivElement>(null);
+  const [drawerInvoiceId, setDrawerInvoiceId] = useState<number | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const fetchInvoices = () => {
     setLoading(true);
@@ -116,6 +120,19 @@ export default function DeskPage() {
     });
   };
 
+  const handleRowClick = (invoiceId: number) => {
+    setDrawerInvoiceId(invoiceId);
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
+  const handleInvoiceUpdated = () => {
+    fetchInvoices();
+  };
+
   if (loading) {
     return (
       <div className="desk-container">
@@ -135,9 +152,12 @@ export default function DeskPage() {
           <h1>PayNudge</h1>
           <p className="desk-subtitle">Collections Desk</p>
         </div>
-        <button onClick={fetchInvoices} className="refresh-button" title="Refresh">
-          Refresh
-        </button>
+        <div className="header-actions">
+          <InsightsBrief />
+          <button onClick={fetchInvoices} className="refresh-button" title="Refresh">
+            Refresh
+          </button>
+        </div>
       </header>
 
       {message && (
@@ -168,8 +188,15 @@ export default function DeskPage() {
       <SummaryStrip invoices={invoices} />
 
       <div className="ledger-section" ref={gridWrapperRef}>
-        <InvoiceGrid invoices={invoices} highlightedId={highlightedId} />
+        <InvoiceGrid invoices={invoices} highlightedId={highlightedId} onRowClick={handleRowClick} />
       </div>
+
+      <InvoiceDrawer
+        invoiceId={drawerInvoiceId}
+        isOpen={drawerOpen}
+        onClose={handleDrawerClose}
+        onInvoiceUpdated={handleInvoiceUpdated}
+      />
     </div>
   );
 }

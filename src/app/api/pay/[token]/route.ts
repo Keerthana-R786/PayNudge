@@ -25,6 +25,14 @@ export async function GET(
 
     const inv = invoice[0];
 
+    // Refuse if invoice is void
+    if (inv.status === 'void') {
+      return NextResponse.json(
+        { error: 'Invoice is void' },
+        { status: 400 }
+      );
+    }
+
     // Return only public fields
     const publicData = {
       invoiceNumber: inv.invoiceNumber,

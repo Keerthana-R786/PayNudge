@@ -16,6 +16,7 @@ interface InvoiceWithOverdue extends Invoice {
 interface InvoiceGridProps {
   invoices: InvoiceWithOverdue[];
   highlightedId?: number | null;
+  onRowClick?: (invoiceId: number) => void;
 }
 
 // Status cell renderer component
@@ -37,7 +38,8 @@ function ActionsCellRenderer(props: ICellRendererParams) {
   
   if (!publicToken) return null;
 
-  const handleCopyLink = () => {
+  const handleCopyLink = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
     const link = `${appUrl}/pay/${publicToken}`;
     
@@ -62,7 +64,7 @@ function ActionsCellRenderer(props: ICellRendererParams) {
   );
 }
 
-export function InvoiceGrid({ invoices, highlightedId }: InvoiceGridProps) {
+export function InvoiceGrid({ invoices, highlightedId, onRowClick }: InvoiceGridProps) {
   const [quickFilterText, setQuickFilterText] = useState('');
   const today = getTodayString();
 
@@ -193,6 +195,21 @@ export function InvoiceGrid({ invoices, highlightedId }: InvoiceGridProps) {
               return 'row-highlight';
             }
             return '';
+          }}
+          onRowClicked={(event) => {
+            // Don't open drawer for pinned totals row
+            if (event.node.isRowPinned()) {
+              return;
+            }
+            // Don't open drawer if clicking on actions column
+            // Check if the event originates from the actions column by examining the event target
+            const target = event.event?.target as HTMLElement;
+            if (target && target.closest('.copy-link-button')) {
+              return;
+            }
+            if (event.data && event.data.id && onRowClick) {
+              onRowClick(event.data.id);
+            }
           }}
         />
       </div>

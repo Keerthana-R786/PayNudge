@@ -1,5 +1,5 @@
 /**
- * Zod schemas for AI-generated invoice drafts
+ * Zod schemas for AI-generated invoice drafts, reminders, and insights
  */
 
 import { z } from 'zod';
@@ -24,3 +24,22 @@ export const InvoiceDraftSchema = z.object({
 });
 
 export type InvoiceDraft = z.infer<typeof InvoiceDraftSchema>;
+
+/**
+ * Schema for AI-generated reminder draft
+ */
+export const ReminderDraftSchema = z.object({
+  subject: z.string().min(1, 'Subject is required').max(200, 'Subject too long'),
+  body: z.string().min(10, 'Body is too short').max(2000, 'Body too long'),
+});
+
+export type ReminderDraft = z.infer<typeof ReminderDraftSchema>;
+
+/**
+ * Schema for AI-generated insights brief
+ */
+export const InsightsDraftSchema = z.object({
+  brief: z.string().min(10, 'Brief is too short').max(500, 'Brief too long'),
+});
+
+export type InsightsDraft = z.infer<typeof InsightsDraftSchema>;

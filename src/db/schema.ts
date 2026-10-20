@@ -24,6 +24,7 @@ export const reminders = sqliteTable('reminders', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   invoiceId: integer('invoice_id').notNull().references(() => invoices.id),
   tone: text('tone', { enum: ['friendly', 'firm', 'final'] }).notNull(),
+  subject: text('subject').notNull(),
   body: text('body').notNull(),
   status: text('status', { enum: ['draft', 'sent'] }).notNull().default('draft'),
   createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),

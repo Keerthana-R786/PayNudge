@@ -40,6 +40,14 @@ export async function POST(request: Request) {
 
     const invoice = result[0];
 
+    // Refuse if void
+    if (invoice.status === 'void') {
+      return NextResponse.json(
+        { error: 'Invoice is void and cannot be paid' },
+        { status: 400 }
+      );
+    }
+
     // Idempotent: if already paid, return success
     if (invoice.status === 'paid') {
       return NextResponse.json({ 
