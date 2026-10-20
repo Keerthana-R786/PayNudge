@@ -6,9 +6,8 @@ import { InsightsDraftSchema } from '@/lib/ai/validations';
 import { getInsightsPrompt } from '@/lib/ai/prompts';
 import { buildInsightsFacts } from '@/lib/insights-facts';
 import { calculateSummary } from '@/lib/summary';
-import { validateInsightsBrief } from '@/lib/ai/reminder-guard';
+import { validateInsightsBrief, extractDollarAmounts } from '@/lib/ai/reminder-guard';
 import { getTodayString } from '@/lib/utils';
-import { getInvoiceDisplayStatus } from '@/lib/invoice-status';
 
 // Mark as dynamic to prevent caching
 export const dynamic = 'force-dynamic';
@@ -22,18 +21,17 @@ export async function GET() {
     // Build facts
     const facts = buildInsightsFacts(allInvoices, today);
 
-    // Collect all allowed amounts for guard (use raw summary cents values)
-    const summary = calculateSummary(allInvoices, today);
-    const allowedAmounts: number[] = [
-      summary.outstanding,
-      summary.overdue,
-      summary.paidThisMonth,
-    ];
+    // Build allowed amounts from the SAME facts object sent to the AI
+    const allowedAmounts: number[] = [];
     
-    // Add top overdue amounts (from database, not formatted strings)
-    const overdueInvoices = allInvoices.filter(inv => getInvoiceDisplayStatus(inv, today) === 'overdue');
-    for (const inv of overdueInvoices.slice(0, 3)) {
-      allowedAmounts.push(inv.amountCents);
+    // Extract cents from formatted strings in facts
+    allowedAmounts.push(...extractDollarAmounts(facts.outstanding));
+    allowedAmounts.push(...extractDollarAmounts(facts.overdue));
+    allowedAmounts.push(...extractDollarAmounts(facts.paidThisMonth));
+    
+    // Add all amounts from topOverdue
+    for (const inv of facts.topOverdue) {
+      allowedAmounts.push(...extractDollarAmounts(inv.amount));
     }
 
     let brief: string | null = null;

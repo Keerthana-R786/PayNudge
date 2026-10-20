@@ -126,3 +126,65 @@ describe('validateInsightsBrief', () => {
     expect(result.error).toContain('999.00');
   });
 });
+
+describe('validateInsightsBrief with facts object', () => {
+  it('accepts paragraph that quotes all figures from facts object', () => {
+    // Given a facts object (as sent to AI)
+    const facts = {
+      outstanding: '$27,500.00',
+      overdue: '$13,800.00',
+      paidThisMonth: '$8,400.00',
+      topOverdue: [
+        { amount: '$6,800.00' },
+        { amount: '$3,400.00' },
+        { amount: '$2,400.00' },
+      ],
+    };
+
+    // Build allowed amounts from the same facts object
+    const allowedAmounts: number[] = [];
+    allowedAmounts.push(...extractDollarAmounts(facts.outstanding));
+    allowedAmounts.push(...extractDollarAmounts(facts.overdue));
+    allowedAmounts.push(...extractDollarAmounts(facts.paidThisMonth));
+    for (const inv of facts.topOverdue) {
+      allowedAmounts.push(...extractDollarAmounts(inv.amount));
+    }
+
+    // Paragraph that uses only those figures should pass
+    const paragraph = 'Total outstanding is $27,500.00, with $13,800.00 overdue. ' +
+      'Paid this month: $8,400.00. Top overdue: $6,800.00, $3,400.00, and $2,400.00.';
+
+    const result = validateInsightsBrief(paragraph, allowedAmounts);
+    expect(result.valid).toBe(true);
+  });
+
+  it('rejects paragraph that invents a figure not in facts', () => {
+    // Given a facts object
+    const facts = {
+      outstanding: '$27,500.00',
+      overdue: '$13,800.00',
+      paidThisMonth: '$8,400.00',
+      topOverdue: [
+        { amount: '$6,800.00' },
+        { amount: '$3,400.00' },
+        { amount: '$2,400.00' },
+      ],
+    };
+
+    // Build allowed amounts from facts
+    const allowedAmounts: number[] = [];
+    allowedAmounts.push(...extractDollarAmounts(facts.outstanding));
+    allowedAmounts.push(...extractDollarAmounts(facts.overdue));
+    allowedAmounts.push(...extractDollarAmounts(facts.paidThisMonth));
+    for (const inv of facts.topOverdue) {
+      allowedAmounts.push(...extractDollarAmounts(inv.amount));
+    }
+
+    // Paragraph that invents $9,999 should fail
+    const paragraph = 'Total outstanding is $27,500.00, with $9,999.00 overdue.';
+
+    const result = validateInsightsBrief(paragraph, allowedAmounts);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain('9999.00');
+  });
+});

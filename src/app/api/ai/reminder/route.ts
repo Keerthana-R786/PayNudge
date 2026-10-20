@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
     const today = getTodayString();
     const facts = buildReminderFacts(invoice, tone, today);
 
-    // Allowed amounts for guard: only the invoice total
-    const allowedAmounts = [invoice.amountCents];
+    // Build allowed amounts from the SAME facts object sent to the AI
+    const allowedAmounts = extractDollarAmounts(facts.amount);
 
     let draft: { subject: string; body: string } | null = null;
     let attempt = 0;
