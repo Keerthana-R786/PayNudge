@@ -58,6 +58,27 @@ export function ReminderSection({ invoice, reminders, onReminderUpdated }: Remin
     }
   };
 
+  const handleSaveEdits = async (reminderId: number) => {
+    try {
+      const response = await fetch(`/api/reminders/${reminderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: editedSubject, body: editedBody }),
+      });
+
+      if (response.ok) {
+        alert('Reminder saved');
+        onReminderUpdated();
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to save reminder');
+      }
+    } catch (err) {
+      console.error('Save edits error:', err);
+      alert('Failed to save reminder');
+    }
+  };
+
   const handleMarkSent = async (reminderId: number) => {
     try {
       const response = await fetch(`/api/reminders/${reminderId}/send`, {
@@ -158,6 +179,9 @@ export function ReminderSection({ invoice, reminders, onReminderUpdated }: Remin
               </div>
 
               <div className="draft-actions">
+                <button onClick={() => handleSaveEdits(draftReminder.id)} className="action-button">
+                  Save edits
+                </button>
                 <button onClick={() => handleMarkSent(draftReminder.id)} className="action-button">
                   Mark as sent
                 </button>
